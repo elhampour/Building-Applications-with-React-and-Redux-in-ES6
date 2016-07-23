@@ -1,11 +1,18 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
-import {browserHistory} from 'react-router';
+import {bindActionCreators} from 'redux';
+import * as authorActions from '../../actions/authorAction';
 import AuthorList from './AuthorList';
+import {browserHistory} from 'react-router';
 
 class AuthorsPage extends React.Component {
   constructor(props, context) {
     super(props, context);
+    this.redirectToAddAuthorPage = this.redirectToAddAuthorPage.bind(this);
+  }
+
+  courseRow(author, index){
+    return <div key={index}>{author.firstName+" "+author.lastName}</div>;
   }
 
   redirectToAddAuthorPage() {
@@ -27,15 +34,21 @@ class AuthorsPage extends React.Component {
   }
 }
 
+AuthorsPage.propTypes = {
+  authors: PropTypes.array.isRequired,
+  actions: PropTypes.object.isRequired
+};
+
 function mapStateToProps(state, ownProps) {
-  debugger;
   return {
     authors: state.authors
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return {};
+  return {
+    actions: bindActionCreators(authorActions,dispatch)
+  };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AuthorsPage);

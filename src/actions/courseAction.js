@@ -30,6 +30,7 @@ export function saveCourse(course) {
   return function (dispatch,getState) {
     dispatch(beginAjaxCall());
     return courseApi.saveCourse(course).then(course => {
+      debugger;
       course.id ? dispatch(updateCourseSuccess(course)) :
         dispatch(createCourseSuccess(course));
     }).catch(error => {
