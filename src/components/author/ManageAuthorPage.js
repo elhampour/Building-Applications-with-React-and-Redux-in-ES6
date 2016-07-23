@@ -1,5 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import AuthorForm from './AuthorForm';
 
 export class ManageAuthorPage extends React.Component {
   constructor(props, context) {
@@ -10,6 +11,12 @@ export class ManageAuthorPage extends React.Component {
     return (
       <div>
         <h1>Course Form</h1>
+        <AuthorForm
+          onChange = {this.updateCourseState}
+          onSave = {this.saveCourse}
+          author={this.state.athor}
+          errors={this.state.errors}
+          saving={this.state.saving}/>
       </div>
     );
   }

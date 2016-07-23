@@ -13,57 +13,57 @@ export class ManageCoursePage extends React.Component {
     this.state = {
       course: Object.assign({}, props.course),
       errors: {},
-      saving : false
+      saving: false
     };
 
     this.updateCourseState = this.updateCourseState.bind(this);
     this.saveCourse = this.saveCourse.bind(this);
   }
 
-  componentWillReceiveProps (nextProps){
-    if(this.props.course.id != nextProps.course.id){
-      this.setState({course: Object.assign({},nextProps.course)});
+  componentWillReceiveProps(nextProps) {
+    if (this.props.course.id != nextProps.course.id) {
+      this.setState({course: Object.assign({}, nextProps.course)});
     }
   }
 
-  updateCourseState(event){
+  updateCourseState(event) {
     const field = event.target.name;
     let course = this.state.course;
     course[field] = event.target.value;
-    return this.setState({course:course});
+    return this.setState({course: course});
   }
 
-  courseFormIsValid(){
+  courseFormIsValid() {
     let formIsValid = true;
-    let errors ={};
+    let errors = {};
 
-    if(this.state.course.title.length < 5){
-      errors.title ="Title must be at least 5 characters.";
+    if (this.state.course.title.length < 5) {
+      errors.title = "Title must be at least 5 characters.";
       formIsValid = false;
     }
 
-    this.setState({errors:errors});
+    this.setState({errors: errors});
     return formIsValid;
   }
 
-  saveCourse(event){
+  saveCourse(event) {
     event.preventDefault();
 
-    if(!this.courseFormIsValid()){
+    if (!this.courseFormIsValid()) {
       return;
     }
 
-    this.setState({saving:true});
+    this.setState({saving: true});
     this.props.actions.saveCourse(this.state.course)
       .then(()=>this.redirect())
-      .catch(error =>{
+      .catch(error => {
         toastr.error(error);
-        this.setState({saving:false});
+        this.setState({saving: false});
       });
   }
 
-  redirect(){
-    this.setState({saving:false});
+  redirect() {
+    this.setState({saving: false});
     toastr.success('Course saved');
     this.context.router.push('/courses');
   }
@@ -72,12 +72,11 @@ export class ManageCoursePage extends React.Component {
     return (
       <CourseForm
         allAuthors={this.props.authors}
-        onChange = {this.updateCourseState}
-        onSave = {this.saveCourse}
+        onChange={this.updateCourseState}
+        onSave={this.saveCourse}
         course={this.state.course}
         errors={this.state.errors}
-        saving={this.state.saving}
-      />
+        saving={this.state.saving}/>
     );
   }
 }
@@ -85,16 +84,16 @@ export class ManageCoursePage extends React.Component {
 ManageCoursePage.propTypes = {
   course: PropTypes.object.isRequired,
   authors: PropTypes.array.isRequired,
-  actions : PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired
 };
 
 ManageCoursePage.contextTypes = {
   router: PropTypes.object.isRequired
 };
 
-function getCourseById(courses,id) {
+function getCourseById(courses, id) {
   const course = courses.filter(course => course.id == id);
-  if(course){
+  if (course) {
     return course[0];
   }
   return null;
@@ -104,8 +103,8 @@ function mapStateToProps(state, ownProps) {
   const courseId = ownProps.params.id;
   let course = {id: '', watchHref: '', title: '', authorId: '', length: '', category: ''};
 
-  if(courseId && state.courses.length > 0){
-    course = getCourseById(state.courses,courseId);
+  if (courseId && state.courses.length > 0) {
+    course = getCourseById(state.courses, courseId);
   }
 
   return {
