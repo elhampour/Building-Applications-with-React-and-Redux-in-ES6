@@ -12,11 +12,13 @@ export class ManageAuthorPage extends React.Component {
     this.state = {
       author: Object.assign({}, props.author),
       errors: {},
-      saving: false
+      saving: false,
+      dirty: false
     };
 
     this.updateAuthorState = this.updateAuthorState.bind(this);
     this.saveAuthor = this.saveAuthor.bind(this);
+    this.routerWillLeave = this.routerWillLeave.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -25,11 +27,23 @@ export class ManageAuthorPage extends React.Component {
     }
   }
 
-  updateAuthorState(event){
+  componentWillMount() {
+    this.context.router.setRouteLeaveHook(
+      this.props.route,
+      this.routerWillLeave
+    )
+  }
+
+  routerWillLeave() {
+    if (this.state.dirty)
+      return 'You have unsaved information, are you sure you want to leave this page?'
+  }
+
+  updateAuthorState(event) {
     const field = event.target.name;
     let author = this.state.author;
     author[field] = event.target.value;
-    return this.setState({author: author});
+    return this.setState({author: author, dirty: true});
   }
 
   authorFormIsValid() {
@@ -67,7 +81,7 @@ export class ManageAuthorPage extends React.Component {
   }
 
   redirect() {
-    this.setState({saving: false});
+    this.setState({saving: false, dirty: true});
     toastr.success('Author saved');
     this.context.router.push('/authors');
   }
@@ -75,8 +89,8 @@ export class ManageAuthorPage extends React.Component {
   render() {
     return (
       <AuthorForm
-        onChange = {this.updateAuthorState}
-        onSave = {this.saveAuthor}
+        onChange={this.updateAuthorState}
+        onSave={this.saveAuthor}
         author={this.state.author}
         errors={this.state.errors}
         saving={this.state.saving}/>
@@ -93,7 +107,7 @@ ManageAuthorPage.contextTypes = {
   router: PropTypes.object.isRequired
 };
 
-function getAuthorById(authors,id){
+function getAuthorById(authors, id) {
   const author = authors.filter(author => author.id == id);
   if (author) {
     return author[0];
@@ -101,7 +115,7 @@ function getAuthorById(authors,id){
   return null;
 }
 
-function mapStateToProps(state,ownProps) {
+function mapStateToProps(state, ownProps) {
   const authorId = ownProps.params.id;
   let author = {id: '', firstName: '', lastName: ''};
 

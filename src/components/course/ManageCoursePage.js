@@ -7,17 +7,20 @@ import {authorsFormattedForDropDown} from '../../selectors/selectors';
 import toastr from 'toastr';
 
 export class ManageCoursePage extends React.Component {
+
   constructor(props, context) {
     super(props, context);
 
     this.state = {
       course: Object.assign({}, props.course),
       errors: {},
-      saving: false
+      saving: false,
+      dirty: false
     };
 
     this.updateCourseState = this.updateCourseState.bind(this);
     this.saveCourse = this.saveCourse.bind(this);
+    this.routerWillLeave = this.routerWillLeave.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -26,11 +29,23 @@ export class ManageCoursePage extends React.Component {
     }
   }
 
+  componentWillMount() {
+    this.context.router.setRouteLeaveHook(
+      this.props.route,
+      this.routerWillLeave
+    )
+  }
+
+  routerWillLeave() {
+    if (this.state.dirty)
+      return 'You have unsaved information, are you sure you want to leave this page?'
+  }
+
   updateCourseState(event) {
     const field = event.target.name;
     let course = this.state.course;
     course[field] = event.target.value;
-    return this.setState({course: course});
+    return this.setState({course: course, dirty: true});
   }
 
   courseFormIsValid() {
@@ -63,7 +78,7 @@ export class ManageCoursePage extends React.Component {
   }
 
   redirect() {
-    this.setState({saving: false});
+    this.setState({saving: false, dirty: false});
     toastr.success('Course saved');
     this.context.router.push('/courses');
   }
