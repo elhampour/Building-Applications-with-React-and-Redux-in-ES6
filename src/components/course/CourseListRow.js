@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import {Link} from 'react-router';
 
-const CourseListRow = ({course,onClickDelete}) => {
+const CourseListRow = ({course, onClickDelete}) => {
   return (
     <tr>
       <td><a href={course.watchHref} target="_blank">Watch</a></td>

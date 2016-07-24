@@ -4,19 +4,35 @@ import {bindActionCreators} from 'redux';
 import * as authorActions from '../../actions/authorAction';
 import AuthorList from './AuthorList';
 import {browserHistory} from 'react-router';
+import toastr from 'toastr';
 
 class AuthorsPage extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.redirectToAddAuthorPage = this.redirectToAddAuthorPage.bind(this);
+    this.onClickDelete = this.onClickDelete.bind(this);
   }
 
-  courseRow(author, index){
-    return <div key={index}>{author.firstName+" "+author.lastName}</div>;
+  courseRow(author, index) {
+    return <div key={index}>{author.firstName + " " + author.lastName}</div>;
   }
 
   redirectToAddAuthorPage() {
     browserHistory.push('/author');
+  }
+
+  finishDelete() {
+    toastr.success('Author deleted.');
+  }
+
+  onClickDelete(authorId) {
+    this.props.actions.deleteAuthor(authorId)
+      .then(()=> {
+        this.finishDelete();
+      })
+      .catch(error => {
+        toastr.error(error);
+      });
   }
 
   render() {
@@ -28,7 +44,7 @@ class AuthorsPage extends React.Component {
                value="Add Author"
                className="btn btn-primary"
                onClick={this.redirectToAddAuthorPage}/>
-        <AuthorList authors={authors}/>
+        <AuthorList authors={authors} onClickDelete={this.onClickDelete}/>
       </div>
     );
   }
@@ -47,7 +63,7 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(authorActions,dispatch)
+    actions: bindActionCreators(authorActions, dispatch)
   };
 }
 
