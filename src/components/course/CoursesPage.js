@@ -7,30 +7,31 @@ import {browserHistory} from 'react-router';
 import toastr from 'toastr';
 
 class CoursesPage extends React.Component {
-  constructor(props,context){
-    super(props,context);
+  constructor(props, context) {
+    super(props, context);
     this.redirectToAddCoursePage = this.redirectToAddCoursePage.bind(this);
     this.onClickDelete = this.onClickDelete.bind(this);
   }
 
-  courseRow(course, index){
+  courseRow(course, index) {
     return <div key={index}>{course.title}</div>;
   }
 
-  redirectToAddCoursePage(){
+  redirectToAddCoursePage() {
     browserHistory.push('/course');
   }
 
-  finishDelete(){
-    alert('finish del');
+  finishDelete() {
+    toastr.success('Course deleted.');
   }
 
-  onClickDelete(courseId){
+  onClickDelete(courseId) {
     this.props.actions.deleteCourse(courseId)
-      .then(()=> this.finishDelete())
+      .then(()=> {
+        this.finishDelete();
+      })
       .catch(error => {
         toastr.error(error);
-        this.setState({saving: false});
       });
   }
 
@@ -40,9 +41,9 @@ class CoursesPage extends React.Component {
       <div>
         <h1>Courses</h1>
         <input type="submit"
-          value="Add Course"
-        className="btn btn-primary"
-        onClick={this.redirectToAddCoursePage}/>
+               value="Add Course"
+               className="btn btn-primary"
+               onClick={this.redirectToAddCoursePage}/>
         <CourseList courses={courses} onClickDelete={this.onClickDelete}/>
       </div>
     );
@@ -54,15 +55,15 @@ CoursesPage.propTypes = {
   actions: PropTypes.object.isRequired
 };
 
-function mapStateToProps(state,ownProps) {
+function mapStateToProps(state, ownProps) {
   return {
-    courses : state.courses
+    courses: state.courses
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(courseActions,dispatch)
+    actions: bindActionCreators(courseActions, dispatch)
   };
 }
 

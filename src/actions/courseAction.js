@@ -1,37 +1,37 @@
 import * as types from './actionTypes';
 import courseApi from '../api/mockCourseApi';
-import {beginAjaxCall,ajaxCallError} from './ajaxStatusActions';
+import {beginAjaxCall, ajaxCallError} from './ajaxStatusActions';
 
 export function loadCoursesSuccess(courses) {
-  return { type : types.LOAD_COURSE_SUCCESS, courses };
+  return {type: types.LOAD_COURSE_SUCCESS, courses};
 }
 
 export function updateCourseSuccess(course) {
-  return { type : types.UPDATE_COURSE_SUCCESS, course };
+  return {type: types.UPDATE_COURSE_SUCCESS, course};
 }
 
 export function createCourseSuccess(course) {
-  return { type : types.CREATE_COURSE_SUCCESS, course };
+  return {type: types.CREATE_COURSE_SUCCESS, course};
 }
 
 export function deleteCourseSuccess(courseId) {
-  return { type : types.DELETE_COURSE_SUCCESS, courseId };
+  return {type: types.DELETE_COURSE_SUCCESS, courseId};
 }
 
 export function loadCourses() {
   return function (dispatch) {
     dispatch(beginAjaxCall());
     return courseApi.getAllCourses()
-      .then(courses=>{
+      .then(courses=> {
         dispatch(loadCoursesSuccess(courses));
-      }).catch(error=>{
+      }).catch(error=> {
         throw(error);
       });
   };
 }
 
 export function saveCourse(course) {
-  return function (dispatch,getState) {
+  return function (dispatch, getState) {
     dispatch(beginAjaxCall());
     return courseApi.saveCourse(course).then(course => {
       course.id ? dispatch(updateCourseSuccess(course)) :
@@ -43,14 +43,15 @@ export function saveCourse(course) {
   };
 }
 
-export function deleteCourse(courseId){
-  return function (dispatch,getState) {
+export function deleteCourse(courseId) {
+  return function (dispatch, getState) {
     dispatch(beginAjaxCall());
-    return courseApi.deleteCourse(courseId).then(course => {
-      dispatch(deleteCourseSuccess(course.id));
-    }).catch(error => {
-      dispatch(ajaxCallError(error));
-      throw(error);
-    });
+    return courseApi.deleteCourse(courseId)
+      .then(courseId => {
+        dispatch(deleteCourseSuccess(courseId));
+      }).catch(error => {
+        dispatch(ajaxCallError(error));
+        throw(error);
+      });
   };
 }

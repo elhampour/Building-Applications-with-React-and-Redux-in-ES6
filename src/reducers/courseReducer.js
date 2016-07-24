@@ -1,35 +1,27 @@
 import * as types from '../actions/actionTypes';
 import initialState from './initialState';
 
-export default function courseReducer(state = initialState.courses,action){
-  switch (action.type){
+export default function courseReducer(state = initialState.courses, action) {
+  switch (action.type) {
     case types.LOAD_COURSE_SUCCESS:
-          return action.courses;
+      return action.courses;
 
     case types.CREATE_COURSE_SUCCESS:
-          return [
-            ...state,
-            Object.assign({},action.course)
-          ];
+      return [
+        ...state,
+        Object.assign({}, action.course)
+      ];
 
     case types.UPDATE_COURSE_SUCCESS:
       return [
         ...state.filter(course => course.id !== action.course.id),
-        Object.assign({},action.course)
+        Object.assign({}, action.course)
       ];
 
     case types.DELETE_COURSE_SUCCESS:
-      const indexOfCourseToDelete = action.courses.findIndex(course => {
-        course.id == action.courseId;
-      });
-      action.courses.splice(indexOfCourseToDelete, 1);
-
-      return [
-        ...state,
-        Object.assign({},action.course)
-      ];
+      return [...state.filter(a => a.id !== action.courseId)];
 
     default:
-          return state;
+      return state;
   }
 }
