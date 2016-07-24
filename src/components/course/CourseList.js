@@ -2,8 +2,10 @@ import React, {PropTypes} from 'react';
 import CourseListRow from './CourseListRow';
 
 const CourseList = ({courses, onClickDelete}) => {
+  const hasNoCourses = courses.length == 0;
+  const tableClassName = hasNoCourses ? "table hidden" : "table";
   return (
-    <table className="table">
+    <table className={tableClassName}>
       <thead>
       <tr>
         <th>&nbsp;</th>

@@ -2,8 +2,10 @@ import React, {PropTypes} from 'react';
 import AuthorListRow from './AuthorListRow';
 
 const AuthorList = ({authors, onClickDelete}) => {
+  const hasNoAuthors = authors.length == 0;
+  const tableClassName = hasNoAuthors ? "table hidden" : "table";
   return (
-    <table className="table">
+    <table className={tableClassName}>
       <thead>
       <tr>
         <th>Id</th>
