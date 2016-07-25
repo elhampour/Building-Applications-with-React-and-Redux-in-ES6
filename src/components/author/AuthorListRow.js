@@ -14,7 +14,7 @@ const AuthorListRow = ({author, onClickDelete}) => {
       <td><a href="#" onClick={onClick}>Delete</a></td>
     </tr>
   );
-}
+};
 
 AuthorListRow.propTypes = {
   author: PropTypes.object.isRequired,

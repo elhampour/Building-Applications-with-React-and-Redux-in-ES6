@@ -20,7 +20,7 @@ const AuthorList = ({authors, onClickDelete}) => {
       </tbody>
     </table>
   );
-}
+};
 
 AuthorList.propTypes = {
   authors: PropTypes.array.isRequired,

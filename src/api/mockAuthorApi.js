@@ -70,7 +70,7 @@ class AuthorApi {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         courseApi.getAllCourses().then((courses)=> {
-          var indexOfCourse = courses.findIndex(a=>a.authorId == authorId);
+          const indexOfCourse = courses.findIndex(a=>a.authorId == authorId);
           if (indexOfCourse == -1) {
             //has no course
             const indexOfAuthorToDelete = authors.findIndex(a =>a.id == authorId);

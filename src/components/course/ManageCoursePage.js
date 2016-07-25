@@ -23,22 +23,24 @@ export class ManageCoursePage extends React.Component {
     this.routerWillLeave = this.routerWillLeave.bind(this);
   }
 
+  componentWillMount() {
+    if (this.context && this.context.router) {
+      this.context.router.setRouteLeaveHook(
+        this.props.route,
+        this.routerWillLeave
+      );
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
     if (this.props.course.id != nextProps.course.id) {
       this.setState({course: Object.assign({}, nextProps.course)});
     }
   }
 
-  componentWillMount() {
-    this.context.router.setRouteLeaveHook(
-      this.props.route,
-      this.routerWillLeave
-    )
-  }
-
   routerWillLeave() {
     if (this.state.dirty)
-      return 'You have unsaved information, are you sure you want to leave this page?'
+      return 'You have unsaved information, are you sure you want to leave this page?';
   }
 
   updateCourseState(event) {
@@ -99,7 +101,8 @@ export class ManageCoursePage extends React.Component {
 ManageCoursePage.propTypes = {
   course: PropTypes.object.isRequired,
   authors: PropTypes.array.isRequired,
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
+  route: PropTypes.object
 };
 
 ManageCoursePage.contextTypes = {

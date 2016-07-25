@@ -21,22 +21,22 @@ export class ManageAuthorPage extends React.Component {
     this.routerWillLeave = this.routerWillLeave.bind(this);
   }
 
+  componentWillMount() {
+    this.context.router.setRouteLeaveHook(
+      this.props.route,
+      this.routerWillLeave
+    );
+  }
+
   componentWillReceiveProps(nextProps) {
     if (this.props.author.id != nextProps.author.id) {
       this.setState({author: Object.assign({}, nextProps.author)});
     }
   }
 
-  componentWillMount() {
-    this.context.router.setRouteLeaveHook(
-      this.props.route,
-      this.routerWillLeave
-    )
-  }
-
   routerWillLeave() {
     if (this.state.dirty)
-      return 'You have unsaved information, are you sure you want to leave this page?'
+      return 'You have unsaved information, are you sure you want to leave this page?';
   }
 
   updateAuthorState(event) {
@@ -100,7 +100,8 @@ export class ManageAuthorPage extends React.Component {
 
 ManageAuthorPage.propTypes = {
   author: PropTypes.object.isRequired,
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
+  route: PropTypes.object
 };
 
 ManageAuthorPage.contextTypes = {
